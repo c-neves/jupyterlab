@@ -1,0 +1,19 @@
+FROM python:3.8.1-alpine3.11
+
+# Upgrade pip.
+RUN pip install --no-cache-dir --upgrade pip
+
+# Install essential build tools.
+# These are needed to install jupyter, jupyterlab and the R kernel packages.
+RUN apk update --no-cache
+RUN apk add --no-cache g++ zeromq-dev
+
+# Install jupyter notebook and jupyter lab.
+RUN pip install --no-cache-dir jupyter jupyterlab
+
+# Install R.
+RUN apk add --no-cache R R-dev R-doc
+
+# Install R kernel and make it available to jupyter.
+RUN Rscript -e "install.packages(c('repr', 'IRdisplay', 'IRkernel'), type = 'source', repos = 'https://vps.fmvz.usp.br/CRAN/')"
+RUN Rscript -e "IRkernel::installspec(user = FALSE)"
