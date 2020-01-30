@@ -12,14 +12,16 @@ ENV CRAN_MIRROR=https://cloud.r-project.org
 RUN Rscript -e "install.packages(c('repr', 'IRdisplay', 'IRkernel'), type = 'source', repos = '$CRAN_MIRROR')"
 RUN Rscript -e "IRkernel::installspec(user = FALSE)"
 
-# Install node to enable jupyter lab extensions.
-RUN apt update && apt install -y curl && \
-  curl -sL https://deb.nodesource.com/setup_12.x | bash && \
-  apt install -y nodejs && \
-  apt -y clean
-
-# Jupyter lab git extension.
-RUN pip install --no-cache-dir --upgrade jupyterlab-git
-
-# Rebuild jupyter lab frontend to activate the installed extension.
-RUN jupyter lab build
+# NOTE: in case you want to add jupyter lab extensions: see below.
+#
+# # Install node to enable jupyter lab extensions.
+# RUN apt update && apt install -y curl && \
+#   curl -sL https://deb.nodesource.com/setup_12.x | bash && \
+#   apt install -y nodejs && \
+#   apt -y clean
+#
+# # Jupyter lab git extension.
+# RUN pip install --no-cache-dir --upgrade jupyterlab-git
+#
+# # Rebuild jupyter lab frontend to activate the installed extension.
+# RUN jupyter lab build

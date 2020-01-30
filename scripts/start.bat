@@ -35,6 +35,10 @@ if ERRORLEVEL 1 (
       cneves/jupyterlab:rpy2-3.2 ^
       lab --allow-root --ip=0.0.0.0 --NotebookApp.token='' --no-browser
 
+    docker exec !repository_name! chmod 700 /root/.ssh/id_rsa
+
+    pause
+
     timeout /t 2
   ) else (
     rem Container is either `running` or `exited` => `docker start`.
