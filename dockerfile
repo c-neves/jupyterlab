@@ -11,16 +11,16 @@ RUN apt update && \
 # Clean apt cache to free up disk space.
 RUN apt clean
 
-# Install R kernel and make it available to jupyter.
-ENV CRAN_MIRROR=https://cloud.r-project.org
-RUN Rscript -e "install.packages(c('repr', 'IRdisplay', 'IRkernel'), type = 'source', repos = '$CRAN_MIRROR')"
-RUN Rscript -e "IRkernel::installspec(user = FALSE)"
-
 # Upgrade pip.
 RUN pip install --no-cache-dir --upgrade pip
 
 # Install jupyter notebook and jupyter lab.
 RUN pip install --no-cache-dir jupyter jupyterlab
+
+# Install R kernel and make it available to jupyter.
+ENV CRAN_MIRROR=https://cloud.r-project.org
+RUN Rscript -e "install.packages(c('repr', 'IRdisplay', 'IRkernel'), type = 'source', repos = '$CRAN_MIRROR')"
+RUN Rscript -e "IRkernel::installspec(user = FALSE)"
 
 # Install [rpy2](https://rpy2.bitbucket.io/).
 ENV RPY2_VERSION 3.2
