@@ -1,8 +1,0 @@
-# FROM cneves/jupyterlab:python3.8.1-r3.5.2
-FROM rpy2/jupyter:3.1.x
-
-# RUN pip install jupyter jupyterlab
-
-# # Install R kernel and make it available to jupyter.
-# RUN Rscript -e "install.packages(c('repr', 'IRdisplay', 'IRkernel'), type = 'source', repos = 'https://vps.fmvz.usp.br/CRAN/')"
-# RUN Rscript -e "IRkernel::installspec(user = FALSE)"

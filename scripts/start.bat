@@ -14,18 +14,29 @@ if ERRORLEVEL 1 (
   for /f %%i in ("%repository_url%") do set repository_name=%%~ni
   for /f %%i in ('git rev-parse --show-toplevel') do set repository_root=%%i
 
-  echo.
-  echo + docker run --name %repository_name% --volume %repository_root%:/%repository_name% --workdir /%repository_name% --publish %PORT%:8888 --entrypoint jupyter --detach --rm cneves/jupyterlab lab --allow-root --ip=0.0.0.0 --no-browser --NotebookApp.token=''
-  docker run ^
-    --name %repository_name% ^
-    --volume %repository_root%:/%repository_name% ^
-    --workdir /%repository_name% ^
-    --publish %PORT%:8888 ^
-    --entrypoint jupyter ^
-    --detach ^
-    --rm ^
-    %repository_name% ^
-    lab --allow-root --ip=0.0.0.0 --no-browser --NotebookApp.token=''
+  mkdir %repository_root%\.docker 2> nul
+
+  docker ps -aq -f "name=^%repository_name%$" > "%repository_root%\.docker\hash"
+  for %%i in ("%repository_root%\.docker\hash") do set container=%%~zi
+
+  if "%container%" equ "0" (
+    rem Container doesn't exit yet => `docker run`.
+    echo.
+    echo + docker run --name %repository_name% --volume %repository_root%:/%repository_name% --workdir /%repository_name% --publish %PORT%:8888 --entrypoint jupyter --detach cneves/jupyterlab:rpy2-3.2 lab --allow-root --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+    docker run ^
+      --name %repository_name% ^
+      --volume %repository_root%:/%repository_name% ^
+      --workdir /%repository_name% ^
+      --publish %PORT%:8888 ^
+      --entrypoint jupyter ^
+      --detach ^
+      cneves/jupyterlab:rpy2-3.2 ^
+      lab --allow-root --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+  ) else (
+    rem Container is either `running` or `exited` => `docker start`.
+    echo + docker start %repository_name%
+    docker start %repository_name%
+  )
 
   echo.
   echo + start http://localhost:%PORT%/lab
