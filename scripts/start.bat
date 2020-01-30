@@ -26,6 +26,7 @@ if ERRORLEVEL 1 (
     echo + docker run --name !repository_name! --volume !repository_root!:/!repository_name! --workdir /!repository_name! --publish %PORT%:8888 --entrypoint jupyter --detach cneves/jupyterlab:rpy2-3.2 lab --allow-root --ip=0.0.0.0 --NotebookApp.token='' --no-browser
     docker run ^
       --name !repository_name! ^
+      --volume %userprofile%\.ssh:/root/.ssh ^
       --volume !repository_root!:/!repository_name! ^
       --workdir /!repository_name! ^
       --publish %PORT%:8888 ^
@@ -33,14 +34,17 @@ if ERRORLEVEL 1 (
       --detach ^
       cneves/jupyterlab:rpy2-3.2 ^
       lab --allow-root --ip=0.0.0.0 --NotebookApp.token='' --no-browser
+
+    timeout /t 2
   ) else (
     rem Container is either `running` or `exited` => `docker start`.
     echo.
     echo + docker start !repository_name!
     docker start !repository_name!
+
+    timeout /t 1
   )
 
-  timeout /t 1
 
   echo.
   echo + start http://localhost:%PORT%/lab
