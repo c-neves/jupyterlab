@@ -32,7 +32,7 @@ cd my-repository
 .\scripts\start.bat
 ```
 
-This will start a docker container running the jupyterlab server and will also launch the browser at `http://localhost:8888/lab`.
+This will start a docker container running the jupyterlab server and will also launch the browser at `http://localhost:8888/lab` if `PORT` is set to `8888`.
 
 ### `kill`
 
