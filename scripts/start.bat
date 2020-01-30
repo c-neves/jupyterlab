@@ -11,7 +11,7 @@ if ERRORLEVEL 1 (
   pause
 ) else (
   for /f %%i in ('git config --get remote.origin.url') do set repository_url=%%i
-  for /F %%i in ('%repository_url%') do set repository_name=%%~ni
+  for /f %%i in ("%repository_url%") do set repository_name=%%~ni
   for /f %%i in ('git rev-parse --show-toplevel') do set repository_root=%%i
 
   echo.
@@ -24,7 +24,7 @@ if ERRORLEVEL 1 (
     --entrypoint jupyter ^
     --detach ^
     --rm ^
-    cneves/jupyterlab ^
+    %repository_name% ^
     lab --allow-root --ip=0.0.0.0 --no-browser --NotebookApp.token=''
 
   echo.
